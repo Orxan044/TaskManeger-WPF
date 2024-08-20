@@ -5,15 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TaskManeger_WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="500">
+        Title="MainWindow" Height="450" Width="500">
     <Grid>
 
         <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
             <RowDefinition Height="267*"></RowDefinition>
             <RowDefinition Height="67*"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <ListView x:Name="ListView1" SelectionChanged="ListView1_SelectionChanged">
+
+        <TextBox TextChanged="TxtBoxSearch_TextChanged" x:Name="TxtBoxSearch"  ></TextBox>
+        
+        <ListView Grid.Row="1" x:Name="ListView1">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}" Width="80" ></GridViewColumn>
@@ -23,8 +27,8 @@
             </ListView.View>
         </ListView>
 
-            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,4,0,0">
-            <TextBox x:Name="txtBox" Height="50"  Width="300" TextChanged="TextBox_TextChanged" ></TextBox>
+            <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,4,0,0">
+            <TextBox x:Name="txtBox" Height="50"  Width="300" ></TextBox>
             <Button Content="Creat Proses" Margin="20 0 0 0" Background="Green" Height="50" Click="Button_Click" ></Button>
             <Button Content="Delete Proses" Background="Red" Margin="20 0 0 0" Height="50" Click="Button_Click_1" ></Button>
         </StackPanel>

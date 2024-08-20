@@ -1,26 +1,25 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Data;
 
 namespace TaskManeger_WPF;
 
 public partial class MainWindow : Window
 {
-
-
+    private ICollectionView? _filter;
+    
     ObservableCollection<Process> processesList = new(Process.GetProcesses());
     
     
     ProcessStartInfo process = new();
     public MainWindow()
-    {
+    { 
+
         InitializeComponent();
         ListView1.ItemsSource = processesList;
-    }
-
-    private void TextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
-    {
-
+        SetupCollecitonView();
     }
 
     private void Button_Click(object sender, RoutedEventArgs e)
@@ -50,7 +49,6 @@ public partial class MainWindow : Window
         if(ListView1.SelectedItem is not null)
         {
             var select = ListView1.SelectedItem as Process;
-            //ListView1.Items.Remove(select);
             processesList.Remove(select!);
 
             select!.Kill();
@@ -58,8 +56,35 @@ public partial class MainWindow : Window
         }
     }
 
-    private void ListView1_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    private void SetupCollecitonView()
     {
+        _filter = CollectionViewSource.GetDefaultView(processesList);
+        _filter.Filter = FilterItems;
+    }
+
+    private void TxtBoxSearch_TextChanged(object obj, System.Windows.Controls.TextChangedEventArgs e)
+    {
+        _filter!.Refresh();
+    }
+
+    private bool FilterItems(object obj)
+    {
+        try
+        {
+            if (obj is Process p)
+            {
+                return string.IsNullOrEmpty(TxtBoxSearch.Text) || p.ProcessName!.Contains(TxtBoxSearch.Text, StringComparison.OrdinalIgnoreCase) ||
+                p.Id.ToString()!.Contains(TxtBoxSearch.Text, StringComparison.OrdinalIgnoreCase);
+            }
+            return false;
+        }
+        catch (Exception ex)
+        {
+
+            MessageBox.Show(ex.Message);
+            return false;
+        }
 
     }
+
 }
